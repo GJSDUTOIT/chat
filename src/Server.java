@@ -41,7 +41,7 @@ public class Server extends Thread {
 		System.out.println(ser);
 		
 		Packet pack2 = new Packet(ser);
-		System.out.println(pack2.serialize());
+		//System.out.println(pack2.serialize());
 		
 		/**try{
 			serverSocket = new ServerSocket(SERVER_PORT); 
