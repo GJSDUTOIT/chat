@@ -1,13 +1,19 @@
-package chat;
 
 import java.awt.Image;
+import java.io.Serializable;
 
-public class Packet {
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+// GJSON library: https://github.com/google/gson
+
+public class Packet implements Serializable {
 	private int msgCode;
 	private User sender;
 	private User recipient;
 	private String text;
 	private Image attachment;
+	private Gson gson;
 	
 	public Packet(int msgCode, User sender, User recipient, String text) {
 		super();
@@ -16,6 +22,7 @@ public class Packet {
 		this.recipient = recipient;
 		this.text = text;
 		this.attachment = null;
+		
 	}
 	
 	public Packet(int msgCode, User sender, User recipient, String text, Image attachment) {
@@ -27,6 +34,18 @@ public class Packet {
 		this.attachment = attachment;
 	}
 
+	public Packet(String serial) {
+		// deserialize
+		Packet pack = gson.fromJson(serial, Packet.class);
+		
+		// build object
+		this.msgCode = pack.msgCode;
+		this.sender = pack.sender;
+		this.recipient = pack.recipient;
+		this.text = pack.text;
+		this.attachment = pack.attachment;
+	}
+	
 	public int getMsgCode() {
 		return msgCode;
 	}
@@ -65,5 +84,15 @@ public class Packet {
 	
 	public void setAttachment(Image attachment) {
 		this.attachment = attachment;
+	}
+	
+	public String serialize() {
+		
+		// create gson builder
+		gson = new GsonBuilder().create();
+		
+		String serial = gson.toJson(this);
+		return serial;
+		
 	}
 }

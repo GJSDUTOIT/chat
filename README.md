@@ -31,3 +31,17 @@ Use the following link as a guide: [Creating a Multithreaded Chat with Socket in
 
 * Serialize `Packet` before and send String to server, where server **deserializes** packet to build object. Then interprets object accordingly.
 * Similarly, packets from server are serialized and sent to clients.
+
+## TODO
+
+### Annika
+
+1. Figure out deserialization using gson
+2. Basic client server test
+3. Implement threading
+4. Mutexes
+
+### Gerrie
+
+1. Make GUI
+2. ?
