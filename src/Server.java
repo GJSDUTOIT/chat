@@ -35,13 +35,7 @@ public class Server extends Thread {
 
 	public static void main(String[] args) {
 		
-		Packet pack = new Packet(2, new User("Annika", "12345"), new User("Gerrie", "78910"), "Hello!");
-		String ser = pack.serialize();
-		
-		System.out.println(ser);
-		
-		Packet pack2 = new Packet(ser);
-		//System.out.println(pack2.serialize());
+
 		
 		/**try{
 			serverSocket = new ServerSocket(SERVER_PORT); 

@@ -54,20 +54,36 @@ public class Packet implements Serializable {
 		// reconstruct object
 
 		// msgCode
-		index = serial.indexOf("\"msgCode\":\"");
+		index = serial.indexOf("\"msgCode\":\"") + 11;
 		this.msgCode = Integer.parseInt(serial.substring(index, serial.indexOf("\"", index)));
 
 		// text
-		index = serial.indexOf("\"text\":\"");
+		index = serial.indexOf("\"text\":\"") + 8;
 		this.text = serial.substring(index, serial.indexOf("\"", index));
 
 		// attachment
-		index = serial.indexOf("\"attachment\":\"");
+		index = serial.indexOf("\"attachment\":\"") + 14;
 		this.attachment = serial.substring(index, serial.indexOf("\"", index));
 
 		// sender
-		index = serial.indexOf("\"sender\":User ");
-		String senderJSON = serial.substring()
+		index = serial.indexOf("\"sender\":User {") + 16;
+		String senderJSON = serial.substring(index, serial.indexOf("}", index));
+		index = serial.indexOf("\"username\":\"") + 12;
+		String uname = senderJSON.substring(index, senderJSON.indexOf("\"", index));
+		index = serial.indexOf("\"ip\":\"") + 6;
+		String ip = senderJSON.substring(index, senderJSON.indexOf("\"", index));
+
+		this.sender = new User(uname, ip);
+
+		// recipient
+		index = serial.indexOf("\"recipient\":User {") + 18;
+		String recipientJSON = serial.substring(index, serial.indexOf("}", index));
+		index = serial.indexOf("\"username\":\"") + 12;
+		uname = recipientJSON.substring(index, recipientJSON.indexOf("\"", index));
+		index = serial.indexOf("\"ip\":\"") + 6;
+		ip = recipientJSON.substring(index, recipientJSON.indexOf("\"", index));
+
+		this.recipient = new User(uname, ip);
 	}
 	
 	public int getMsgCode() {
