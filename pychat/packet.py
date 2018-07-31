@@ -11,7 +11,7 @@ class Packet:
         self.attachment = attachment
 
     def serialize(self):
-        return pickle.dumps(self)
+        return pickle.dumps(self, -1)
 
     @classmethod
     def deserialize(cls, serial):
