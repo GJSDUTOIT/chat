@@ -118,10 +118,7 @@ if __name__=="__main__":
     receive_thread = Thread(target=receive)
     receive_thread.start()
 
-    while running:	
-        pass
-
-    sys.exit(0)
+    #sys.exit(0)
 
 
 ### GUI binding ###
