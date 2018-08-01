@@ -18,7 +18,7 @@ CLIENT_USER = ("client", "0.0.0.0")
 CODE_ERROR_LOGIN = 0
 CODE_PLAIN_MSG = 1
 CODE_ATTACHMENT_MSG = 2
-CODE_LOGOUT = 3
+CODE_DISCONNECT = 3
 CODE_LOGIN_REQUEST = 4
 CODE_LOGIN_SUCCESS = 5
 CODE_USER_LOGIN = 6
@@ -41,19 +41,18 @@ def handle_client(client, client_address):
     global CLIENT_USER
     username = recv(client).text
 
-    if (username in clients):
+    if (username in clients.iterkeys()):
         send(CODE_LOGIN_REQUEST, client, "That username is already taken! Please select another.")
-        handle_client(client)
+        handle_client(client, client_address)
 
     # welcome client
     clients[username] = client
     addresses[username] = client_address
-    CLIENT_USER = (username, client)
+    CLIENT_USER = (username, client_address)
     send(CODE_LOGIN_SUCCESS, client, "Welcome, {0}!".format(username))
 
     # display joining status
-    ac = active_clients()
-    broadcast(CODE_USER_LOGIN, ac)
+    broadcast(CODE_USER_LOGIN, active_clients())
 
     while True:
         packet = recv(client)
@@ -71,11 +70,14 @@ def handle_client(client, client_address):
             sender = packet.sender
             send(code, clients[rec], msg, attachment=packet.attachment, sender=sender)
 
-        elif code == CODE_LOGOUT:
-            broadcast("{0} has left the chat.".format(username))
-            send(CODE_LOGOUT, client, "Successfully logged out.")
+        elif code == CODE_DISCONNECT:
+	    del clients[username]
+	    del addresses[username]
+	    broadcast(CODE_PLAIN_MSG, "{0} has left the chat.".format(username))
+	    broadcast(CODE_USER_LOGOUT, active_clients())
+            send(CODE_DISCONNECT, client, "Successfully logged out.")
             client.close()
-            del clients[client]
+	    print("%s:%s has disconnected." % client_address)
             break
 
 
@@ -98,7 +100,6 @@ def active_clients():
     for client in clients.iterkeys():
 	s += "{0}@{1}%".format(client, addresses[client])
     s = s[:-1]
-    print s
     return s
 
 if __name__ == "__main__":
