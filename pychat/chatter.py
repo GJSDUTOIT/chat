@@ -23,6 +23,8 @@ CODE_USER_LOGIN = 6
 CODE_USER_LOGOUT = 7
 
 active_users = {}
+active_chats = {}
+
 running = True
 
 def receive():
